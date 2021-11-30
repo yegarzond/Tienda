@@ -1,0 +1,9 @@
+venv/
+.idea
+*.ipynb
+__pycache__/
+
+#Coverage Result
+.coverage
+results.xml
+.env
