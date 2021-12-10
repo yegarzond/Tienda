@@ -4,6 +4,7 @@ import LogIn from './components/Login.vue'
 import SingUp from './components/SingUp.vue'
 import Home from './components/Home.vue'
 import Account from './components/Account.vue'
+import Menu from './components/Menu.vue'
 
 const routes = [
   {
@@ -22,6 +23,11 @@ const routes = [
     component: SingUp
   },
   {
+    path: '/menu',
+    name: "menu",
+    component: Menu
+  },
+  {
     path: '/user/home',
     name: 'home',
     component: Home
@@ -30,7 +36,8 @@ const routes = [
     path: '/user/account',
     name: "account",
     component: Account
-    }
+  },
+  
 
 ]
 

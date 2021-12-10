@@ -2,7 +2,9 @@
   <div id="app" class="app">
     <div class="header">
       <h1>Tienda / nombre?</h1>
+
       <nav>
+        <button v-if="!is_auth" v-on:click="menu">Productos</button>
         <button v-if="is_auth">Inicio</button>
         <button v-if="is_auth" v-on:click="loadAccount">Cuenta</button>
         <button v-if="is_auth">Cerrar Sesión</button>
@@ -21,8 +23,10 @@
     </div>
 
     <div class="footer">
-      <h2> <p>Misión TIC 2022</p> <p>Grupo 4</p></h2>
-      
+      <h2>
+        <p>Misión TIC 2022</p>
+        <p>Grupo 4</p>
+      </h2>
     </div>
   </div>
 </template>
@@ -41,8 +45,12 @@ export default {
   methods: {
     verifyAuth: function () {
       this.is_auth = localStorage.getItem("isAuth") || false;
-      if (this.is_auth == false) this.$router.push({ name: "logIn" });
+      if (this.is_auth == false) this.$router.push({ name: "menu" });
       else this.$router.push({ name: "home" });
+    },
+
+    menu: function () {
+      this.$router.push({ name: "menu" });
     },
 
     loadLogIn: function () {
@@ -89,7 +97,8 @@ export default {
 <style>
 body {
   margin: 0 0 0 0;
-  font-family: 'Varela Round', sans-serif;
+  font-family: "Varela Round", sans-serif;
+  font-size: 14px;
 }
 .header {
   margin: 0%;
@@ -107,6 +116,9 @@ body {
 .header h1 {
   width: 35%;
   text-align: center;
+  font-size:2.5em;
+  line-height: 0;
+  margin: 0px;
 }
 .header nav {
   height: 100%;
@@ -116,6 +128,9 @@ body {
   align-items: center;
   font-size: 20px;
   margin-right: 50px;
+  color: transparent;
+  background-color: transparent;
+  box-shadow: 0 0 0 0 transparent;
 }
 .header nav button {
   color: #e5e7e9;
@@ -123,6 +138,8 @@ body {
   border: 1px solid #e5e7e9;
   border-radius: 5px;
   padding: 10px 20px;
+  margin-right: 8px;
+  font-size: 1rem;
 }
 
 .header nav button:hover {
@@ -135,10 +152,9 @@ body {
   height: 75vh;
   margin: 0%;
   padding: 0%;
-  background-image: url('https://business-intelligence.grupobit.net/hubfs/Imagen_BlogBIT_1600x478px_300719.jpg');
+  background-image: url("https://business-intelligence.grupobit.net/hubfs/Imagen_BlogBIT_1600x478px_300719.jpg");
   background-size: cover;
   background-repeat: no-repeat;
-  
 }
 
 .footer {
@@ -149,7 +165,6 @@ body {
   min-height: 100px;
   background-color: #1a72dd;
   color: #e5e7e9;
-  
 }
 
 .footer h2 {
@@ -158,6 +173,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  line-height: 0px;
+  font-size:2.5em
 }
 
 .footer p {

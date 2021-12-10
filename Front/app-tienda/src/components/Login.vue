@@ -2,7 +2,18 @@
   <div class="logIn_user">
     <div class="container_logIn_user">
       <h2>Iniciar sesión</h2>
-      <form v-on:submit.prevent="processLogInUser">
+      <div class="iconos">
+        <a href="https://es-la.facebook.com/">
+          <md-icon class="fa fa-facebook-square"></md-icon>
+        </a>
+        <a href="https://twitter.com/?lang=es">
+          <md-icon class="fa fa-twitter-square"></md-icon>
+        </a>
+        <a href="https://www.google.com/">
+          <md-icon class="fa fa-google"></md-icon>
+        </a>
+      </div>
+      <form @submit.prevent="login()">
         <input type="text" v-model="user.username" placeholder="Username" />
         <br />
         <input type="password" v-model="user.password" placeholder="Password" />
@@ -15,6 +26,9 @@
 
 <script>
 import axios from "axios";
+import NProgress from "nprogress";
+import { useAuthStore } from "../store/auth";
+
 export default {
   name: "LogIn",
   data: function () {
@@ -23,28 +37,44 @@ export default {
         username: "",
         password: "",
       },
+      authStore: useAuthStore(),
     };
   },
   methods: {
-    processLogInUser: function () {
+    login() {
+      NProgress.start();
       axios
-        .post("https://mision-tic-bank-be.herokuapp.com/login/", this.user, {
-          headers: {},
-        })
-        .then((result) => {
-          let dataLogIn = {
-            username: this.user.username,
-            token_access: result.data.access,
-            token_refresh: result.data.refresh,
-          };
-
-          this.$emit("completedLogIn", dataLogIn);
+        .post("https://mision-tic-bank-be.herokuapp.com/login/", this.user)
+        .then((response) => {
+          console.log(response);
+          this.authStore.setUser(response.data);
         })
         .catch((error) => {
-          if (error.response.status == "401")
-            alert("ERROR 401: Credenciales Incorrectas.");
-        });
+          console.log(error);
+        })
+        .then(() => NProgress.done());
     },
+
+    // v-on:submit.prevent="processLogInUser" se pone en el form
+    // processLogInUser: function () {
+    //   axios
+    //     .post("https://mision-tic-bank-be.herokuapp.com/login/", this.user, {
+    //       headers: {},
+    //     })
+    //     .then((result) => {
+    //       let dataLogIn = {
+    //         username: this.user.username,
+    //         token_access: result.data.access,
+    //         token_refresh: result.data.refresh,
+    //       };
+
+    //       this.$emit("completedLogIn", dataLogIn);
+    //     })
+    //     .catch((error) => {
+    //       if (error.response.status == "401")
+    //         alert("ERROR 401: Credenciales Incorrectas.");
+    //     });
+    // },
   },
 };
 </script>
@@ -58,27 +88,29 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
 .container_logIn_user {
   border: 1px solid #283747;
   border-radius: 10px;
-  width: 25%;
-  height: 60%;
+  width: 40%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   background-color: rgb(167 165 165 / 53%);
 }
 .logIn_user h2 {
-  color: #283747; 
-  text-shadow: 2px 2px 9px rgb(255, 255, 255),-2px -2px 9px rgb(255, 255, 255) ;
+  color: #283747;
+  text-shadow: 2px 2px 9px rgb(255, 255, 255), -2px -2px 9px rgb(255, 255, 255);
+  padding: 10px;
+  font-size: 2em;
 }
 
 .logIn_user form {
   width: 70%;
 }
+
 .logIn_user input {
   height: 40px;
   width: 100%;
@@ -96,10 +128,26 @@ export default {
   border-radius: 5px;
   padding: 10px 25px;
   margin: 5px 0;
+  font-size: 1.2em;
 }
 .logIn_user button:hover {
   color: #e5e7e9;
   background: crimson;
   border: 1px solid #283747;
+}
+
+.iconos {
+  width: 100%;
+  height: 50px;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  padding-bottom: 10px;
+}
+
+.iconos a {
+  color: #1761b1;
+  font-size: 2em;
+  text-shadow: 2px 2px 9px rgb(255, 255, 255), -2px -2px 9px rgb(255, 255, 255);
 }
 </style>

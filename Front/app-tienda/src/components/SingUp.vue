@@ -2,7 +2,7 @@
   <div class="signUp_user">
     <div class="container_signUp_user">
       <h2>Registrarse</h2>
-      <form v-on:submit.prevent="processSignUp">
+      <form  @submit.prevent="createUser()">
         <input type="text" v-model="user.username" placeholder="Username" />
         <br />
         <input type="password" v-model="user.password" placeholder="Password" />
@@ -14,7 +14,7 @@
 
         <input
           type="number"
-          v-model="user.account.balance"
+          v-model="user.balance"
           placeholder="Initial Balance"
         />
 
@@ -27,44 +27,72 @@
 
 <script>
 import axios from "axios";
+import NProgress from "nprogress";
+import { useAuthStore } from '../store/auth';
+
 export default {
   name: "SignUp",
   data: function () {
     return {
+      
+      authStore: useAuthStore(),
       user: {
         username: "",
         password: "",
         name: "",
         email: "",
-        account: {
-          lastChangeDate: new Date().toJSON().toString(),
-          balance: 0,
-          isActive: true,
-        },
       },
+      balance: 0,
     };
   },
   methods: {
-    processSignUp: function () {
-      axios
-        .post("https://mision-tic-bank-be.herokuapp.com/user/", this.user, {
-          headers: {},
-        })
-        .then((result) => {
-          let dataSignUp = {
-            username: this.user.username,
-            token_access: result.data.access,
-            token_refresh: result.data.refresh,
-          };
+    createUser() {
+      const user = {
+        ...this.user,
+        account: {
+          lastChangeDate: new Date(),
+          balance: this.balance,
+          isActive: true,
+        },
+      };
 
-          this.$emit("completedSignUp", dataSignUp);
-        })
+      console.log(user);
+      console.log("pendiente por probar el axios");
+
+      NProgress.start();
+      axios
+        .post("http://127.0.0.1:8000/user/", this.user)
+        .then((result) => {
+          console.log(result)
+          this.authStore.setUser(response.data);
+          })
         .catch((error) => {
           console.log(error);
 
           alert("ERROR: Fallo en el registro.");
-        });
+        })
+        .then(() => NProgress.done());
     },
+    // v-on:submit.prevent="processSignUp" se coloca en el form
+    // processSignUp: function () {
+    //   axios
+    //     .post("http://127.0.0.1:8000/user/", this.user, {
+    //       headers: {},
+    //     })
+    //     .then((result) => {
+    //       let dataSignUp = {
+    //         username: this.user.username,
+    //         token_access: result.data.access,
+    //         token_refresh: result.data.refresh,
+    //       };
+    //       this.$emit("completedSignUp", dataSignUp);
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+
+    //       alert("ERROR: Fallo en el registro.");
+    //     });
+    // },
   },
 };
 </script>
@@ -82,8 +110,8 @@ export default {
 .container_signUp_user {
   border: 1px solid #283747;
   border-radius: 10px;
-  width: 25%;
-  height: 60%;
+  width: 40%;
+  height: 80%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -91,8 +119,10 @@ export default {
   background-color: rgb(167 165 165 / 53%);
 }
 .signUp_user h2 {
-  color: #283747;  
-  text-shadow: 2px 2px 9px rgb(255, 255, 255),-2px -2px 9px rgb(255, 255, 255) ;
+  color: #283747;
+  text-shadow: 2px 2px 9px rgb(255, 255, 255), -2px -2px 9px rgb(255, 255, 255);
+  font-size: 2rem;
+  margin: 0;
 }
 .signUp_user form {
   width: 70%;

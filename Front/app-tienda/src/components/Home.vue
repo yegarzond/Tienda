@@ -7,12 +7,35 @@
 </template>
 
 <script>
+import axios from "axios";
+import NProgress from "nprogress";
+import { useAuthStore } from "../store/auth";
+
 export default {
   name: "Home",
   data: function () {
     return {
       username: localStorage.getItem("username") || "none",
+      authStore: useAuthStore(),
+      userData: null,
     };
+  },
+
+  created() {
+    NProgress.start();
+    axios
+      .get("https://intensivo3-banco-be.herokuapp.com/user/" + this.authStore.userId, {
+        headers: {
+          Authorization: `Bearer ${this.authStore.currentUser.access}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+      .then(() => NProgress.done());
   },
 };
 </script>
