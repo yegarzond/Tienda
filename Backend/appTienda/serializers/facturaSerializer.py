@@ -1,43 +1,65 @@
+from django.db import models
+from django.db.models import fields
 from rest_framework import serializers
+from appTienda.models.producto import Producto
+from appTienda.serializers import itemsFacturaSerializer
+from appTienda.serializers.itemsFacturaSerializer import ItemsFacturaSerializer
+from appTienda.serializers.itemsFacturaSerializerTotal import ItemsFacturaSerializerTotal
+from ..models.itemsFactura import ItemsFactura
+from ..models.factura import Factura
 
-from appTienda.serializers.userSerializer import UserSerializer
-from appTienda.serializers.itemsFactura import ItemsFactura
-from appTienda.serializer.producto import ProductoSerializer
-
-from appTienda.models.factura import Factura
-from appTienda.models.itemsFactura import itemsFactura
-from appTienda.models.producto import producto
-from appTienda.models.user import User
-
-
-class FacturaSerializer(serializer.ModelSerializer):
-
-
-    itemsFactura = ItemsFacturaSerializer()
-
-
+class FacturaSerializer(serializers.ModelSerializer):
+    itemsfactura=ItemsFacturaSerializer(many=True)
     class Meta:
-        model: factura
-        fields: ['id','fecha','tipo_doc','num_doc', 'nombres','apellidos','total_items','total_factura','itemsFactura']
-
+        model   = Factura
+        fields = ['tipo_doc','num_doc', 'nombres','apellidos','itemsfactura']
     def create(self, validated_data):
-        itemsFactura_data = validated_data.pop('itemsFactura')
-        facturaInstance = Factura.objects.create(**validated_data)
-        itemsFactura.objects.create(factura = facturaInstance, **itemsFactura_data)
-        return facturaInstance
-         
-    def to_representation(self, obj):
-        factura = Factura.objects.get(id = obj.id)
-        itemsFactura = ItemsFactura.objects.get(itemsFactura = obj.id)
-        return {
+        itemsData=validated_data.pop('itemsfactura')
+        items_de_factura=0
+        suma=0
+        for i in itemsData:
+            items_de_factura=i['unidades']
+            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio').first()
+            dato['precio']
+            suma+=(i['unidades']*dato['precio'])
+      
+        facturaInstance=Factura.objects.create(**validated_data,total_items=items_de_factura , total_factura=suma)
+        
+        for i in itemsData:   
+            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio','undidades_disponibles').first()
+            ItemsFactura.objects.create(idFactura=facturaInstance,**i,precio=dato['precio'],subtotal=i['unidades']*dato['precio'])
+            actualizar=Producto.objects.filter(id=i['idProducto'].id).first()
+            actualizar.undidades_disponibles-=i['unidades']
+            actualizar.save()
             
-            'fecha': factura.fecha, 
-            'total_items': factura.total_items,
-            'total_factura': factura.total_factura,
-            'itemsFactura':{
-                'unidades': itemsFactura.unidades,
-                'precio': itemsFactura.precio,
-                'subtotal': itemsFactura.subtotal
+        return facturaInstance
+    
+    def to_representation(self, instance):
+        factura=Factura.objects.get(id=instance.id)
+        item=ItemsFactura.objects.filter(idFactura=instance.id)
+        lista=[]
+        for i in ItemsFacturaSerializerTotal(item, many=True).data:
+            x={
+                'idItem': i.id,
+                'id': i.idProducto.id,
+                'ref':i.idProducto.ref,
+                'nombre':i.idProducto.nombre,
+                'categoria':i.idProducto.categoria,
+                'marca':i.idProducto.marca,
+                'unidad_medida':i.idProducto.unidad_medida,
+                'unidades':i.unidades,
+                'precio':i.precio,
+                'subtotal':i.subtotal
             }
-        }
-
+            lista.append(x)
+        return {
+            "id":factura.id,    
+            "fecha":factura.fecha,        
+            "tipo_doc":factura.tipo_doc,
+            "num_doc":factura.num_doc,
+            "nombres":factura.nombres,
+            "apellidos":factura.apellidos,
+            "total_items":factura.total_items,
+            "total_factura":factura.total_factura,
+            "itemsFactura": lista
+            }
