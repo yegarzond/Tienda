@@ -19,7 +19,7 @@ class FacturaSerializer(serializers.ModelSerializer):
         items_de_factura=0
         suma=0
         for i in itemsData:
-            items_de_factura=i['unidades']
+            items_de_factura+=i['unidades']
             dato=Producto.objects.filter(id=i['idProducto'].id).values('precio').first()
             dato['precio']
             suma+=(i['unidades']*dato['precio'])
