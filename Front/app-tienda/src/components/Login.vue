@@ -47,7 +47,7 @@ export default {
         .post("http://127.0.0.1:8000/login/", this.user)
         .then((response) => {
           console.log(response);
-          this.authStore.setUser(response.data);
+          this.authStore.setUserLogin(response.data);
         })
         .catch((error) => {
           console.log(error);

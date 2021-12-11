@@ -17,11 +17,12 @@ class UserDetailView(views.APIView):
     tokenBackend = TokenBackend(algorithm=settings.SIMPLE_JWT['ALGORITHM'])
     valid_data = tokenBackend.decode(token, verify=False)
     
-    if (valid_data['user_id'] != kwargs['pk']):
-      error = { 'message': 'Credenciales inválidas!' }
-      return Response(error, status=status.HTTP_401_UNAUTHORIZED)
+    # if (valid_data['user_id'] != kwargs['pk']):
+    #   error = { 'message': 'Credenciales inválidas!' }
+    #   return Response(error, status=status.HTTP_401_UNAUTHORIZED)
     
-    user = self.users.get(id=kwargs['pk'])
+    # user = self.users.get(id=kwargs['pk'])
+    user = self.users.get(id=valid_data['user_id'])
     user_serializer = UserSerializer(user)
 
     return Response(user_serializer.data, status=status.HTTP_200_OK)

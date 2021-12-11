@@ -1,10 +1,9 @@
 <template>
   <div id="app" class="app">
     <div class="header">
-      <h1>Tienda / nombre?</h1>
+      <h1>Tienda de la Esquina</h1>
 
       <nav>
-        <button v-if="!is_auth" v-on:click="menu">Productos</button>
         <button v-if="is_auth">Inicio</button>
         <button v-if="is_auth" v-on:click="loadAccount">Cuenta</button>
         <button v-if="is_auth">Cerrar Sesión</button>
@@ -45,12 +44,8 @@ export default {
   methods: {
     verifyAuth: function () {
       this.is_auth = localStorage.getItem("isAuth") || false;
-      if (this.is_auth == false) this.$router.push({ name: "menu" });
+      if (this.is_auth == false) this.$router.push({ name: "logIn" });
       else this.$router.push({ name: "home" });
-    },
-
-    menu: function () {
-      this.$router.push({ name: "menu" });
     },
 
     loadLogIn: function () {

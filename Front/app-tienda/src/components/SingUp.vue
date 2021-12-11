@@ -58,26 +58,7 @@ export default {
         })
         .then(() => NProgress.done());
     },
-    // v-on:submit.prevent="processSignUp" se coloca en el form
-    // processSignUp: function () {
-    //   axios
-    //     .post("http://127.0.0.1:8000/user/", this.user, {
-    //       headers: {},
-    //     })
-    //     .then((result) => {
-    //       let dataSignUp = {
-    //         username: this.user.username,
-    //         token_access: result.data.access,
-    //         token_refresh: result.data.refresh,
-    //       };
-    //       this.$emit("completedSignUp", dataSignUp);
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-
-    //       alert("ERROR: Fallo en el registro.");
-    //     });
-    // },
+    
   },
 };
 </script>

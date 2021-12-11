@@ -8,11 +8,16 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   actions: {
+    setUserLogin(data) {
+      this.currentUser = data
+      localStorage.setItem("access", data.access);
+      localStorage.setItem("refresh", data.refresh);
+      router.push({ name: "Home" });
+    },
     setUser(data) {
       this.currentUser = data
       localStorage.setItem("access", data.access);
       localStorage.setItem("refresh", data.refresh);
-      console.log(data, 'setUser')
       router.push({ name: "Home" });
     },
 

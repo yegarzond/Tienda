@@ -37,7 +37,6 @@ export default {
         .get("http://127.0.0.1:8000/producto/")
         .then((response) => {
           console.log(response);
-          this.productos.push(response)
           console.log(this.productos)
         })
         .catch((error) => {

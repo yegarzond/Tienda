@@ -28,12 +28,12 @@ const routes = [
     component: Menu
   },
   {
-    path: '/user/login',
+    path: '/home',
     name: 'Home',
     component: Home
   },
   {
-    path: '/user/account',
+    path: '/account',
     name: "account",
     component: Account
   },
