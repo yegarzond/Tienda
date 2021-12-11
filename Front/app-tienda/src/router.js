@@ -28,7 +28,7 @@ const routes = [
     component: Menu
   },
   {
-    path: '/home',
+    path: '/user/home',
     name: 'home',
     component: Home
   },
@@ -42,7 +42,7 @@ const routes = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })
 

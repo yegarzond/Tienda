@@ -45,7 +45,6 @@ export default {
         ...this.user
       };
 
-      // console.log(user);
 
       NProgress.start();
       axios

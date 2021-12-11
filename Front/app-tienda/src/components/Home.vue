@@ -1,7 +1,8 @@
 <template>
-  <div class="greetings">
+  <div class="greetings" v-if="userData">
     <h1>
-      ¡Bienvenido <span> {{ username }} </span>!
+      <!-- ¡Bienvenido <span> {{ username }} </span>! -->
+      ¡Bienvenido !
     </h1>
   </div>
 </template>
@@ -15,7 +16,7 @@ export default {
   name: "Home",
   data: function () {
     return {
-      username: localStorage.getItem("username") || "none",
+      // username: localStorage.getItem("username") || "none",
       authStore: useAuthStore(),
       userData: null,
     };
@@ -23,20 +24,28 @@ export default {
 
   // created() {
   //   NProgress.start();
-  //   axios
-  //     .get("http://127.0.0.1:8000/" + this.authStore.userId, {
-  //       headers: {
-  //         Authorization: `Bearer ${this.authStore.currentUser.access}`,
-  //       },
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     })
+    
   //     .then(() => NProgress.done());
   // },
+
+  methods: {
+    getUserData() {
+      return axios
+      .get("http://127.0.0.1:8000/" + this.authStore.userId, {
+        headers: {
+          Authorization: `Bearer ${this.authStore.currentUser.access}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+    },
+
+    
+  }
 };
 </script>
 

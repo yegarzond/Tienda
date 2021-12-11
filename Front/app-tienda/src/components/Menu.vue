@@ -14,7 +14,7 @@
           <td>morfeo me llama</td>
           <td>morfeo me llama1</td>
           <td>morfeo me llama2</td>
-          
+
         </tr>
       </tbody>
       <!-- <li>nombre producto {{}} descripcion {{}} precio</li> -->
@@ -26,7 +26,9 @@
 export default {
   name: "Menu",
   data: function () {
-    return {};
+    return {
+      productos:[]
+    };
   },
   methods: {
     producto() {
@@ -35,7 +37,8 @@ export default {
         .get("http://127.0.0.1:8000/producto/")
         .then((response) => {
           console.log(response);
-          
+          this.productos.push(response)
+          console.log(this.productos)
         })
         .catch((error) => {
           console.log(error);

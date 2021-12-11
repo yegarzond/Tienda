@@ -4,4 +4,7 @@ import router from './router'
 import 'nprogress/nprogress.css'
 import { createPinia } from 'pinia'
 
-createApp(App).use(createPinia()).use(router).mount('#app')
+createApp(App).
+use(router).
+use(createPinia()).
+mount('#app')
