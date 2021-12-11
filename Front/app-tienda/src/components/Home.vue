@@ -1,17 +1,16 @@
 <template>
   <div class="cabecera">
-    <h1>
-      ¡Bienvenido ! <span> {{ userData.name }} </span>
-    </h1>
     <div class="greetings">
-      <div class="producto">
-        <h2>producto</h2>
-      </div>
-      <div class="inventario">
-        <h2>Facturación</h2>
-      </div>
-      <div class="Venta">
-        <h2>Venta</h2>
+      <h1>
+        ¡Bienvenido!
+        <span> {{ userData.name }} </span>
+      </h1>
+      <div class="seccion">
+        <button v-on:click="redirectToProducts()">Productos</button>
+
+        <button v-on:click="redirectToBill()">Facturación</button>
+
+        <button v-on:click="redirectToSales()">Venta</button>
       </div>
     </div>
   </div>
@@ -80,12 +79,21 @@ export default {
     redirectToSignIn() {
       this.$router.push({ name: "logIn" });
     },
+    redirectToProducts() {
+      this.$router.push({ name: "Productos" });
+    },
+    redirectToSales() {
+      this.$router.push({ name: "Sales" });
+    },
+    redirectToBill() {
+      this.$router.push({ name: "Bill" });
+    },
   },
 };
 </script>
 
 <style>
-/* .greetings {
+.cabecera {
   margin: 0;
   padding: 0%;
   height: 100%;
@@ -94,39 +102,52 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.greetings h1 {
-  font-size: 50px;
+.cabecera h1 {
   color: #283747;
+  text-shadow: 7px 10px 11px #fafafa, -4px -6px 31px #fafafa;
+  margin: 28px 0px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
-.greetings span {
-  color: crimson;
-  font-weight: bold;
-} */
-  .cabecera {
-    text-align: center;
-    padding: 7px;
-    
-  }
-  .cabecera h1 {
-    color: white;
-    text-shadow: 7px 10px 11px #4caf50, -4px -6px 31px #28bbad;
-  }
+.cabecera span {
+  color: #191816;
+  font-weight: 700;
+}
 
 .greetings {
+  border: 1px solid #283747;
+  border-radius: 10px;
+  width: 85%;
+  height: 85%;
   display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(167 165 165 / 53%);
+}
+.greetings button {
+  font-size: 2.5rem;
+  /* line-height: 110%; */
+  margin: 11px 17px;
+  /* text-shadow: 0px 6px 7px #fafafa, 0px -5px 7px #fafafa; */
+  color: #283747;
+  /* margin-bottom: -30px; */
+  background-color: rgb(255 255 255 / 70%);
+  border-radius: 6px;
+  border: 1px solid black;
+  padding: 10px;
 }
 
-.producto{
+.seccion {
   margin: 0;
   padding: 0;
   border-radius: 15px;
-  background-color: blue;
-}
-
-.inventario {
-  background-color: red;
-
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  align-content: center;
+  cursor: pointer;
 }
 </style>

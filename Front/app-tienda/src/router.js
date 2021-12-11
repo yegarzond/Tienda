@@ -4,7 +4,9 @@ import LogIn from './components/Login.vue'
 import SingUp from './components/SingUp.vue'
 import Home from './components/Home.vue'
 import Account from './components/Account.vue'
-import Menu from './components/Menu.vue'
+import Products from './components/Productos.vue'
+import Sales from './components/Sales.vue'
+import Bill from './components/Bill.vue'
 
 const routes = [
   {
@@ -23,9 +25,19 @@ const routes = [
     component: SingUp
   },
   {
-    path: '/menu',
-    name: "menu",
-    component: Menu
+    path: '/productos',
+    name: "Productos",
+    component: Products
+  },
+  {
+    path: '/sales',
+    name: "Sales",
+    component: Sales
+  },
+  {
+    path: '/bill',
+    name: "Bill",
+    component: Bill
   },
   {
     path: '/home',

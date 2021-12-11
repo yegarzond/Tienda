@@ -112,7 +112,7 @@ body {
   width: 35%;
   text-align: center;
   font-size:2.5em;
-  line-height: 0;
+  /* line-height: 0; */
   margin: 0px;
 }
 .header nav {
@@ -141,6 +141,7 @@ body {
   color: #283747;
   background: #1a9fdd;
   border: 1px solid #e5e7e9;
+  cursor: pointer;
 }
 
 .main-component {

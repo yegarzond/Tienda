@@ -24,7 +24,7 @@
 
 <script>
 export default {
-  name: "Menu",
+  name: "Productos",
   data: function () {
     return {
       productos:[]
