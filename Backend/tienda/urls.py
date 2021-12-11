@@ -15,16 +15,20 @@ Including another URLconf
 """
 from django.urls import path
 from appTienda import views
+#from appTienda.views.productoListView import ProductoListView
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
 
 urlpatterns = [
     path('login/', TokenObtainPairView.as_view()),
     path('refresh/', TokenRefreshView.as_view()),
     path('user/', views.UserCreateView.as_view()),
-    #path('user/actualizar/<int:pk>/', views.UserDetailView.as_view()),
     path('user/<int:pk>/', views.UserDetailView.as_view()),
-    path('producto/', views.ProductoCreateView.as_view()),
-    #path('producto/actualizar/<int:pk>/', views.ProductoDetailView.as_view()),
+    path('producto/crear/', views.ProductoCreateView.as_view()),
     path('producto/<int:pk>/', views.ProductoDetailView.as_view()),
+    path('producto/',  views.ProductoView.as_view()),
+    path('factura/', views.CreateFacturaView.as_view()),
+    path('factura/<int:pk>/',  views.FacturaDetailView.as_view()),
+    path("facturas/", views.FacturaListView.as_view()),
+    
     
 ]

@@ -18,7 +18,7 @@ class FacturaSerializer(serializers.ModelSerializer):
         items_de_factura=0
         suma=0
         for i in itemsData:
-            items_de_factura=i['unidades']
+            items_de_factura+=i['unidades']
             dato=Producto.objects.filter(id=i['idProducto'].id).values('precio').first()
             dato['precio']
             suma+=(i['unidades']*dato['precio'])
@@ -26,10 +26,10 @@ class FacturaSerializer(serializers.ModelSerializer):
         facturaInstance=Factura.objects.create(**validated_data,total_items=items_de_factura , total_factura=suma)
         
         for i in itemsData:   
-            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio','undidades_disponibles').first()
+            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio','unidades_disponibles').first()
             ItemsFactura.objects.create(idFactura=facturaInstance,**i,precio=dato['precio'],subtotal=i['unidades']*dato['precio'])
             actualizar=Producto.objects.filter(id=i['idProducto'].id).first()
-            actualizar.undidades_disponibles-=i['unidades']
+            actualizar.unidades_disponibles-=i['unidades']
             actualizar.save()
             
         return facturaInstance
