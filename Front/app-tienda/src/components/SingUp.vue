@@ -12,12 +12,6 @@
         <input type="email" v-model="user.email" placeholder="Email" />
         <br />
 
-        <input
-          type="number"
-          v-model="user.balance"
-          placeholder="Initial Balance"
-        />
-
         <br />
         <button type="submit">Registrarse</button>
       </form>
@@ -42,29 +36,23 @@ export default {
         name: "",
         email: "",
       },
-      balance: 0,
+      
     };
   },
   methods: {
     createUser() {
       const user = {
-        ...this.user,
-        account: {
-          lastChangeDate: new Date(),
-          balance: this.balance,
-          isActive: true,
-        },
+        ...this.user
       };
 
-      console.log(user);
-      console.log("pendiente por probar el axios");
+      // console.log(user);
 
       NProgress.start();
       axios
-        .post("http://127.0.0.1:8000/user/", this.user)
+        .post("http://127.0.0.1:8000/user/", user)
         .then((result) => {
           console.log(result)
-          this.authStore.setUser(response.data);
+          this.authStore.setUser(result.data);
           })
         .catch((error) => {
           console.log(error);

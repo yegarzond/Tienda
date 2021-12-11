@@ -73,6 +73,11 @@ REST_FRAMEWORK = {
 		'rest_framework_simplejwt.authentication.JWTAuthentication',
 	)
 }
+# CORS_ALLOWED_ORIGINS = [
+#     'http://localhost:8081/',
+#     'http://127.0.0.1:8000/'
+# ]
+CORS_ALLOW_ALL_ORIGINS= True
 
 ROOT_URLCONF = 'tienda.urls'
 AUTH_USER_MODEL = 'appTienda.User'

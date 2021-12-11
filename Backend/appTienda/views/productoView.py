@@ -3,6 +3,7 @@ from rest_framework import generics,  status, views
 from rest_framework.response import Response
 from appTienda.models.producto import Producto
 from appTienda.serializers.productoSerializer import ProductoSerializer
+
 class CreateProductoView(views.APIView):
     queryset=Producto.objects.all()
     serializer_class= ProductoSerializer

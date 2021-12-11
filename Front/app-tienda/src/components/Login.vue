@@ -44,7 +44,7 @@ export default {
     login() {
       NProgress.start();
       axios
-        .post("https://mision-tic-bank-be.herokuapp.com/login/", this.user)
+        .get("http://127.0.0.1:8000/admin/", this.user)
         .then((response) => {
           console.log(response);
           this.authStore.setUser(response.data);

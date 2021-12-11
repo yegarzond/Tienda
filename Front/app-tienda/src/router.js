@@ -28,7 +28,7 @@ const routes = [
     component: Menu
   },
   {
-    path: '/user/home',
+    path: '/home',
     name: 'home',
     component: Home
   },

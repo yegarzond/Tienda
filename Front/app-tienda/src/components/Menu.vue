@@ -1,20 +1,20 @@
 <template>
-
-  <div class="cointainer-menu">
-    <h3>producto categoria</h3>
-    <table class="centered container-table">
-      <thead>
-        <tr>
+  <div class="cointainer-menu" >
+    <h3>producto categoria </h3>
+    <table class="centered container-table" >
+      <thead >
+        <tr >
           <th>nombre producto</th>
           <th>descripcion</th>
           <th>precio</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
+        <tr >
           <td>morfeo me llama</td>
           <td>morfeo me llama1</td>
           <td>morfeo me llama2</td>
+          
         </tr>
       </tbody>
       <!-- <li>nombre producto {{}} descripcion {{}} precio</li> -->
@@ -27,6 +27,21 @@ export default {
   name: "Menu",
   data: function () {
     return {};
+  },
+  methods: {
+    producto() {
+      NProgress.start();
+      axios
+        .get("http://127.0.0.1:8000/producto/")
+        .then((response) => {
+          console.log(response);
+          
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .then(() => NProgress.done());
+    },
   },
 };
 </script>
@@ -54,7 +69,6 @@ export default {
 
 .container-table {
   margin: 0 0 12px 0px;
-  background-color:rgb(255 255 255 / 70%);
-
+  background-color: rgb(255 255 255 / 70%);
 }
 </style>
