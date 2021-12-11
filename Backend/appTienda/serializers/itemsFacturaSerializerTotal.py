@@ -10,5 +10,9 @@ class ItemsFacturaSerializerTotal(serializers.ModelSerializer):
         fields= '__all__'
     def to_representation(self, instance):
         item=ItemsFactura.objects.get(id=instance.id)
+<<<<<<< HEAD
         return item
         
+=======
+        return item
+>>>>>>> feat/serializer

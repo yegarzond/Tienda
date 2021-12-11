@@ -62,4 +62,8 @@ class FacturaSerializer(serializers.ModelSerializer):
             "total_items":factura.total_items,
             "total_factura":factura.total_factura,
             "itemsFactura": lista
+<<<<<<< HEAD
             }
+=======
+            }
+>>>>>>> feat/serializer

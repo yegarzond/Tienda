@@ -7,6 +7,10 @@ from ..models.producto import Producto
 class ItemsFacturaSerializer(serializers.ModelSerializer):
     class Meta:
         model   = ItemsFactura
+<<<<<<< HEAD
         fields  = ['idProducto','unidades']
    
    
+=======
+        fields  = ['idProducto','unidades']
+>>>>>>> feat/serializer
