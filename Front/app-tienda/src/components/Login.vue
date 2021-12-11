@@ -44,7 +44,7 @@ export default {
     login() {
       NProgress.start();
       axios
-        .get("http://127.0.0.1:8000/user/", this.user)
+        .post("http://127.0.0.1:8000/login/", this.user)
         .then((response) => {
           console.log(response);
           this.authStore.setUser(response.data);

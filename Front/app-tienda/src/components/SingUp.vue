@@ -55,8 +55,6 @@ export default {
           })
         .catch((error) => {
           console.log(error);
-
-          alert("ERROR: Fallo en el registro.");
         })
         .then(() => NProgress.done());
     },

@@ -8,6 +8,7 @@ from appTienda.serializers.itemsFacturaSerializerTotal import ItemsFacturaSerial
 from ..models.itemsFactura import ItemsFactura
 from ..models.factura import Factura
 
+
 class FacturaSerializer(serializers.ModelSerializer):
     itemsfactura=ItemsFacturaSerializer(many=True)
     class Meta:
@@ -26,10 +27,10 @@ class FacturaSerializer(serializers.ModelSerializer):
         facturaInstance=Factura.objects.create(**validated_data,total_items=items_de_factura , total_factura=suma)
         
         for i in itemsData:   
-            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio','undidades_disponibles').first()
+            dato=Producto.objects.filter(id=i['idProducto'].id).values('precio','unidades_disponibles').first()
             ItemsFactura.objects.create(idFactura=facturaInstance,**i,precio=dato['precio'],subtotal=i['unidades']*dato['precio'])
             actualizar=Producto.objects.filter(id=i['idProducto'].id).first()
-            actualizar.undidades_disponibles-=i['unidades']
+            actualizar.unidades_disponibles-=i['unidades']
             actualizar.save()
             
         return facturaInstance
@@ -62,8 +63,5 @@ class FacturaSerializer(serializers.ModelSerializer):
             "total_items":factura.total_items,
             "total_factura":factura.total_factura,
             "itemsFactura": lista
-<<<<<<< HEAD
+
             }
-=======
-            }
->>>>>>> feat/serializer

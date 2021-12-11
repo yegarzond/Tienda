@@ -8,6 +8,7 @@ from appTienda.models.user import User
 from appTienda.serializers.userSerializer import UserSerializer
 from appTienda.serializers.userUpdateSerializer import UserUpdateSerializer
 
+
 class UserDetailView(views.APIView):
   users = User.objects.all()
   

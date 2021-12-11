@@ -6,5 +6,5 @@ class Producto(models.Model):
     categoria=models.CharField(max_length=35,  null=False)
     marca=models.CharField(max_length=25)
     unidad_medida=models.CharField(max_length=45)
-    undidades_disponibles=models.IntegerField()    
+    unidades_disponibles=models.IntegerField()
     precio=models.FloatField()

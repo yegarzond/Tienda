@@ -28,8 +28,8 @@ const routes = [
     component: Menu
   },
   {
-    path: '/user/home',
-    name: 'home',
+    path: '/user/login',
+    name: 'Home',
     component: Home
   },
   {

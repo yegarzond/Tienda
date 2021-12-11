@@ -13,19 +13,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-<<<<<<< HEAD
-from django.contrib import admin
-from django.urls import path
-from appTienda import views
 
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    
-    path('user/',  views.UserCreateView.as_view()),
-    path('factura/',  views.CreateFacturaView.as_view()),
-    path('producto/',  views.ProductoListView.as_view()),    
-]
-=======
 from django.urls import path
 from appTienda import views
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView)
@@ -36,9 +24,9 @@ urlpatterns = [
     path('user/', views.UserCreateView.as_view()),
     #path('user/actualizar/<int:pk>/', views.UserDetailView.as_view()),
     path('user/<int:pk>/', views.UserDetailView.as_view()),
-    path('producto/', views.ProductoCreateView.as_view()),
+    #path('producto/', views.ProductoCreateView.as_view()),
     #path('producto/actualizar/<int:pk>/', views.ProductoDetailView.as_view()),
     path('producto/<int:pk>/', views.ProductoDetailView.as_view()),
     
 ]
->>>>>>> feat/serializer
+

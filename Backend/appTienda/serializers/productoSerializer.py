@@ -6,7 +6,7 @@ from ..models.producto import Producto
 class ProductoSerializer(serializers.ModelSerializer):
     class Meta:
         model   = Producto
-        fields  = ['ref','nombre','categoria','marca','unidad_medida','undidades_disponibles','precio']
+        fields  = ['ref','nombre','categoria','marca','unidad_medida','unidades_disponibles','precio']
 
 def create(self, validated_data):
     producto=Producto.objects.create(**validated_data)
@@ -20,6 +20,6 @@ def to_representation(self, obj):
         'categoria':producto.categoria,
         'marca':producto.marca,
         'unidad_medida':producto.unidad_medida,
-        'undidades_disponibles':producto.undidades_disponibles,
+        'unidades_disponibles':producto.unidades_disponibles,
         'precio':producto.precio
     }

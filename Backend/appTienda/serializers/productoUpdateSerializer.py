@@ -5,7 +5,7 @@ class ProductoUpdateSerializer(serializers.ModelSerializer):
 
   class Meta:
     model = Producto
-    fields = ['unidad_medida','undidades_disponibles','precio']
+    fields = ['unidad_medida','unidades_disponibles','precio']
 
   def update(self, instance, validated_data):
     instance.unidad_medida = validated_data.get('unidad_medida', instance.unidad_medida)
