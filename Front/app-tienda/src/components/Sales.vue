@@ -9,6 +9,20 @@ name: "Sales",
     return {
     };
   },
+   methods: {
+    producto() {
+      NProgress.start();
+      axios
+        .get("http://127.0.0.1:8000/producto/")
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .then(() => NProgress.done());
+    },
+  },
 }
 </script>
 

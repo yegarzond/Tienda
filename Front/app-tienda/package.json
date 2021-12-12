@@ -14,13 +14,21 @@
     "pinia": "^2.0.6",
     "vue": "^3.0.0",
     "vue-material": "^1.0.0-beta-15",
-    "vue-router": "^4.0.0-0"
+    "vue-money-format": "^1.2.4",
+    "vue-number-format": "^1.2.0",
+    "vue-router": "^4.0.0-0",
+    "vue-sweetalert2": "^5.0.2",
+    "vue2-filters": "^0.13.0",
+    "vuetify": "^2.6.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-plugin-router": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
-    "@vue/compiler-sfc": "^3.0.0"
+    "@vue/compiler-sfc": "^3.0.0",
+    "deepmerge": "^4.2.2",
+    "sass": "^1.32.13",
+    "sass-loader": "^12.4.0"
   },
   "browserslist": [
     "> 1%",
