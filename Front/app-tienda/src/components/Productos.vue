@@ -13,8 +13,33 @@
                 <form class="col s12">
                   <div class="row">
                     <div class="input-field col s6">
-                      
-                  </div>
+                      <label >Categoria</label>
+                      <input type="text" v-model="categoria">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Marca</label>
+                      <input type="text" v-model="marca">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Nombre Producto</label>
+                      <input type="text" v-model="nombre">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Precio</label>
+                      <input type="text" v-model="precio">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Referencia</label>
+                      <input type="text" v-model="ref">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Unidad de medida</label>
+                      <input type="text" v-model="unidad_medida">
+                    </div>
+                    <div class="input-field col s6">
+                      <label >Unidades disponibles </label>
+                      <input type="text" v-model="unidades_disponibles">
+                    </div>
                   </div>
                 </form>
               </div>
