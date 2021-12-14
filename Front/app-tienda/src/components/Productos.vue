@@ -3,57 +3,60 @@
     <h3>Listado de productos</h3>
     <button @click="modalCrear = true">Crear Producto</button>
 
-    <div v-if="modalCrear" class="centrar-modal">
-      <transition name="fade">
+    <div v-if="modalCrear" class="container">
+      <form action="" @submit.prevent="crearProducto()">
         <div class="row">
-          <div class="col s12">
-            <div class="card">
-              <div class="card-content">
-                <span class="card-title">Crear Producto</span>
-                <form class="col s12">
-                  <div class="row">
-                    <div class="input-field col s6">
-                      <label >Categoria</label>
-                      <input type="text" v-model="categoria">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Marca</label>
-                      <input type="text" v-model="marca">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Nombre Producto</label>
-                      <input type="text" v-model="nombre">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Precio</label>
-                      <input type="text" v-model="precio">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Referencia</label>
-                      <input type="text" v-model="ref">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Unidad de medida</label>
-                      <input type="text" v-model="unidad_medida">
-                    </div>
-                    <div class="input-field col s6">
-                      <label >Unidades disponibles </label>
-                      <input type="text" v-model="unidades_disponibles">
-                    </div>
-                  </div>
-                </form>
+          <div class="col m12 card-panel">
+            <span>Crear Producto</span>
+            <div class="row">
+              <div class="col m12">
+                <label>Nombre Producto</label>
+                <input type="text" v-model="nombre" />
               </div>
-              <div class="card-action bton">
-                <button @click="crearProducto()">Guardar</button>
-                <button>Cancelar</button>
+            </div>
+            <div class="row">
+              <div class="col m4">
+                <label>Categoria</label>
+                <input type="text" v-model="categoria" />
+              </div>
+              <div class="col m4">
+                <label>Marca</label>
+                <input type="text" v-model="marca" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col m4">
+                <label>Precio</label>
+                <input type="number" v-model="precio" />
+              </div>
+              <div class="col m4">
+                <label>Referencia</label>
+                <input type="text" v-model="ref" />
+              </div>
+            </div>
+            <div class="row">
+              <div class="col m4">
+                <label>Unidad de medida</label>
+                <input type="text" v-model="unidad_medida" />
+              </div>
+              <div class="col m4">
+                <label>Unidades disponibles </label>
+                <input type="number" v-model="unidades_disponibles" />
               </div>
             </div>
           </div>
+          <div class="card-action bton">
+            <button class=""><i class="material-icons">save</i> Guardar</button>
+
+            <button class="">
+              <i class="material-icons">cancel</i>Cancelar
+            </button>
+          </div>
         </div>
-      </transition>
+      </form>
     </div>
 
-    <table class="centered container-table">
+    <table class="centered container-table striped #eceff1 blue-grey lighten-5">
       <thead>
         <tr>
           <th>Nombre Producto</th>
@@ -61,6 +64,7 @@
           <th>Marca</th>
           <th>Precio</th>
           <th>Unidades Disponibles</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
@@ -71,20 +75,19 @@
           <td>{{ numberFormat(item.precio) }}</td>
           <td>{{ item.unidades_disponibles }}</td>
           <td>
-            <button
-              class="teal accent-4"
-              dark
-              @click="listarProducto(producto.id)"
-            >
-              Editar
+            <button class="" @click="listarProducto(producto.id)">
+              <i class="material-icons">create</i>
             </button>
-            <button class="error" darck @click="borrarProducto(producto.id)">
-              Eliminar
+            <button class="" @click="borrarProducto(producto.id)">
+              <i class="material-icons">delete</i>
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <ul>
+      <li v-for=""></li>
+    </ul>
   </div>
 </template>
 
@@ -98,21 +101,27 @@ export default {
     return {
       productos: [],
       producto: {},
-      nuevoProducto: {
-        categoria: "",
-        marca: "",
-        nombre: "",
-        precio: 0,
-        ref: "",
-        unidad_medida: "",
-        unidades_disponibles: 0,
-      },
+      categoria: "",
+      marca: "",
+      nombre: "",
+      precio: 0,
+      ref: "",
+      unidad_medida: "",
+      unidades_disponibles: 0,
+
       modalCrear: false,
     };
   },
   computed: {},
   created: function () {
     this.listarProductos();
+  },
+
+  mounted() {
+    document.addEventListener("DOMContentLoaded", function () {
+      var elems = document.querySelectorAll(".modal");
+      this.productos = M.Modal.init(elems, null);
+    });
   },
 
   methods: {
@@ -137,6 +146,9 @@ export default {
         .then((response) => {
           this.productos = [...response.data];
           console.log(this.productos);
+          if (this.productos.length > 10 ){
+            
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -144,11 +156,22 @@ export default {
         .then(() => NProgress.done());
     },
     crearProducto() {
+      {
+        var data = {
+          categoria: this.categoria,
+          marca: this.marca,
+          nombre: this.nombre,
+          precio: this.precio,
+          ref: this.ref,
+          unidad_medida: this.unidad_medida,
+          unidades_disponibles: this.unidades_disponibles,
+        };
+      }
+
       axios
         .post("http://127.0.0.1:8000/producto/crear/")
-        .then((response) => {
-          // this.nuevoProducto.categoria = response.data.categoria;
-          console.log(response.data);
+        .then(() => {
+          console.log();
           this.listarProductos();
         })
 
