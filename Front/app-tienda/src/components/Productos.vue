@@ -1,7 +1,67 @@
 <template>
-  <!-- <div class="cointainer-menu">
-    <h3>producto categoria</h3>
-    <table class="centered container-table">
+  <div class="cointainer-menu">
+    <h3>Listado de productos</h3>
+    <button @click="openForm()">Crear Producto</button>
+
+    <div class="modal" id="modal-producto">
+      <div class="modal-content">
+        <form action="" @submit.prevent="crearProducto()">
+          <div class="row">
+            <div class="col m12 card-panel">
+              <span>Crear Producto</span>
+              <div class="row">
+                <div class="col m">
+                  <label>ID</label>
+                  <input type="text" disabled v-model="nombre" />
+                </div>
+                <div class="col m8">
+                  <label>Nombre Producto</label>
+                  <input type="text" v-model="nombre" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Categoria</label>
+                  <input type="text" v-model="categoria" />
+                </div>
+                <div class="col m4">
+                  <label>Marca</label>
+                  <input type="text" v-model="marca" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Precio</label>
+                  <input type="number" v-model="precio" />
+                </div>
+                <div class="col m4">
+                  <label>Referencia</label>
+                  <input type="text" v-model="ref" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Unidad de medida</label>
+                  <input type="text" v-model="unidad_medida" />
+                </div>
+                <div class="col m4">
+                  <label>Unidades disponibles </label>
+                  <input type="number" v-model="unidades_disponibles" />
+                </div>
+              </div>
+            </div>
+            <div class="card-action bton">
+              <button class="">
+                <i class="material-icons">save</i>
+                {{ id == 0 ? "Guardar" : "Actualizar" }}
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <table class="centered container-table striped">
       <thead>
         <tr>
           <th>Nombre Producto</th>
@@ -9,143 +69,47 @@
           <th>Marca</th>
           <th>Precio</th>
           <th>Unidades Disponibles</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in productos" :key="item.nombre">
+        <tr v-for="item in paginate()" :key="item.nombre">
           <td>{{ item.nombre }}</td>
           <td>{{ item.categoria }}</td>
           <td>{{ item.marca }}</td>
           <td>{{ numberFormat(item.precio) }}</td>
           <td>{{ item.unidades_disponibles }}</td>
           <td>
-            <v-bton>Editar</v-bton>
-            <v-bton>Eliminar</v-bton>
+            <button class="" @click="listarProducto(producto.id)">
+              <i class="material-icons">create</i>
+            </button>
+            <button class="" @click="borrarProducto(producto.id)">
+              <i class="material-icons">delete</i>
+            </button>
           </td>
         </tr>
       </tbody>
     </table>
-  </div> -->
-
-  <v-data-table
-    :headers="headers"
-    :items="productos"
-    sort-by="Categoria"
-    class="elevation-3"
-  >
-    <template v-slot:top>
-      <v-toolbar flat>
-        <v-toolbar-title>Lista de Productos</v-toolbar-title>
-        <v-divider class="mx-4" inset vertical></v-divider>
-        <v-spacer></v-spacer>
-
-        <v-dialog v-model="dialog" max-width="500px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" @click="crearProducto()">
-              Crear Producto
-            </v-btn>
-          </template>
-
-          <v-card>
-            <v-card-title>
-              <span class="text-h5">{{ formTitle }}</span>
-            </v-card-title>
-
-            <v-card-text>
-              <v-container>
-                <v-row>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.id"
-                      
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.categoria"
-                      label="Categoria"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.marca"
-                      label="Marca"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.nombre"
-                      label="Nombre"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.precio"
-                      label="Precio"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.ref"
-                      label="Referencia"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.unidad_medida"
-                      label="unidad de medida"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12" sm="6" md="4">
-                    <v-text-field
-                      v-model="producto.unidades_disponibles"
-                      label="unidades disponibles"
-                    ></v-text-field>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-card-text>
-
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="close"> Cancel </v-btn>
-              <v-btn color="blue darken-1" text @click="save"> Save </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-        <v-dialog v-model="dialogDelete" max-width="500px">
-          <v-card>
-            <v-card-title class="text-h5"
-              >Are you sure you want to delete this item?</v-card-title
-            >
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="blue darken-1" text @click="closeDelete"
-                >Cancel</v-btn
-              >
-              <v-btn color="blue darken-1" text @click="deleteItemConfirm"
-                >OK</v-btn
-              >
-              <v-spacer></v-spacer>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
-
-      </v-toolbar>
-    </template>
-
-    <template v-slot:item="{ item }">
-      <v-icon small class="mr-2" @click="editItem(item)"> mdi-pencil </v-icon>
-      <v-icon small @click="deleteItem(item)"> mdi-delete </v-icon>
-    </template>
-
-    <template v-slot:no-data>
-      <v-btn color="primary" @click="initialize"> Reset </v-btn>
-    </template>
-
-  </v-data-table>
-
+    <ul class="pagination">
+      <li v-bind:class="{ disabled: pageNumber == 1 }">
+        <a href="#!" @click="previousPage()"
+          ><i class="material-icons">chevron_left</i></a
+        >
+      </li>
+      <li
+        v-bind:class="{ active: page + 1 == pageNumber }"
+        v-for="page in getPagination()"
+        :key="page"
+      >
+        <a href="#!" @click="paginate(page + 1)">{{ page + 1 }}</a>
+      </li>
+      <li v-bind:class="{ disabled: pageNumber == totalPages }">
+        <a href="#!" @click="nextPage()"
+          ><i class="material-icons">chevron_right</i></a
+        >
+      </li>
+    </ul>
+  </div>
 </template>
 
 
@@ -154,62 +118,85 @@
 <script>
 import axios from "axios";
 import NProgress from "nprogress";
+import M from "materialize-css";
 
 export default {
   name: "Productos",
   data: function () {
     return {
       productos: [],
-      producto: {
-        id: null,
-        categoria: "",
-        marca: "",
-        nombre: "",
-        precio: 0,
-        ref: "",
-        unidad_medida: "",
-        unidades_disponibles: 0,
-      },
+      productosFiltered: [],
+      producto: {},
+      id: 0,
+      categoria: "",
+      marca: "",
+      nombre: "",
+      precio: 0,
+      ref: "",
+      unidad_medida: "",
+      unidades_disponibles: 0,
 
-      headers: [
-        {
-          text: "Nombre Producto",
-          align: "start",
-          sortable: false,
-          value: "name",
-        },
-        { text: "Categoria", value: "Categoria" },
-        { text: "Marca", value: "Marca" },
-        { text: "Precio", value: "Precio" },
-        { text: "Unidades Disponibles", value: "Unidades Disponibles" },
-        { text: "Acciones", value: "actions", sortable: false },
-      ],
-      dialog: false,
-      dialogDelete: false,
+      modalCrear: false,
+      modales: [],
+      pageSize: 10,
+      pageNumber: 1,
+      totalPages: 0,
     };
   },
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? "Nuevo Producto" : "Editar Producto";
-    },
-  },
-
-  watch: {
-      dialog (val) {
-        val || this.close()
-      },
-      dialogDelete (val) {
-        val || this.closeDelete()
-      },
-    },
-
+  computed: {},
   created: function () {
     this.listarProductos();
   },
 
+  mounted() {
+    var elems = document.querySelectorAll(".modal");
+    this.modales = M.Modal.init(elems, null);
+  },
 
   methods: {
+    numberFormat(value) {
+      const formatter = new Intl.NumberFormat("es-CO", {
+        style: "currency",
+        currency: "COP",
+        minimumFractionDigits: 0,
+      });
+
+      return formatter.format(value);
+    },
+
+    paginate(newPage) {
+      this.pageNumber = newPage ? newPage : this.pageNumber;
+      return this.productos.slice(
+        (this.pageNumber - 1) * this.pageSize,
+        this.pageNumber * this.pageSize
+      );
+    },
+
+    getPagination() {
+      var pages = Math.round(this.productos.length / this.pageSize);
+
+      this.totalPages = pages;
+      return Array.from(Array(pages).keys());
+    },
+    nextPage() {
+      if (this.pageNumber == this.totalPages) return;
+
+      this.pageNumber++;
+    },
+    previousPage() {
+      if (this.pageNumber == 1) return;
+
+      this.pageNumber--;
+    },
+
+    openForm(id) {
+      this.id = id || 0;
+      var modal_producto = M.Modal.getInstance(
+        document.querySelector("#modal-producto")
+      );
+      modal_producto.open();
+    },
+
     listarProductos() {
       NProgress.start();
       axios
@@ -224,71 +211,39 @@ export default {
         .then(() => NProgress.done());
     },
     crearProducto() {
-      NProgress.start();
+      {
+        var data = {
+          categoria: this.categoria,
+          marca: this.marca,
+          nombre: this.nombre,
+          precio: this.precio,
+          ref: this.ref,
+          unidad_medida: this.unidad_medida,
+          unidades_disponibles: this.unidades_disponibles,
+        };
+      }
+      let config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access')}`,
+        },
+      };
+
       axios
-        .post("http://127.0.0.1:8000/producto/crear/", {categoria:this.producto.categoria, 
-        marca:this.producto.marca, nombre:this.producto.nombre, precio:this.producto.precio,
-        ref:this.producto.ref, unidad_medida:this.producto.unidad_medida, unidades_disponibles:this.producto.unidades_disponibles})
+        .post("http://127.0.0.1:8000/producto/crear/", data, config)
         .then((response) => {
           console.log(response);
+          this.categoria = response.data.categoria;
+          this.marca = response.data.marca;
+          this.nombre = response.data.nombre;
+          this.precio = response.data.precio;
+          this.ref = response.data.ref;
+          this.unidad_medida = response.data.unidad_medida;
+          this.unidades_disponibles = response.data.unidades_disponibles;
           this.listarProductos();
         })
-        this.producto.categoria='', 
-        this.producto.marca='', 
-        this.producto.nombre='', 
-        this.producto.precio=0,
-        this.producto.ref='', 
-        this.producto.unidad_medida='', 
-        this.producto.unidades_disponibles=0
         .catch((error) => {
           console.log(error);
-        })
-        .then(() => NProgress.done());
-    },
-    listarProducto() {
-      NProgress.start();
-      axios
-        .get("http://127.0.0.1:8000/producto/" + id)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .then(() => NProgress.done());
-    },
-    actualizarProducto() {
-      NProgress.start();
-      axios
-        .put("http://127.0.0.1:8000/producto/" + id)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .then(() => NProgress.done());
-    },
-    borrarProducto() {
-      NProgress.start();
-      axios
-        .delete("http://127.0.0.1:8000/producto/" + id)
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .then(() => NProgress.done());
-    },
-    numberFormat(value) {
-      const formatter = new Intl.NumberFormat("es-CO", {
-        style: "currency",
-        currency: "COP",
-        minimumFractionDigits: 0,
-      });
-
-      return formatter.format(value);
+        });
     },
   },
 };
@@ -319,5 +274,9 @@ export default {
 .container-table {
   margin: 0 0 12px 0px;
   background-color: rgb(255 255 255 / 70%);
+}
+
+.centrar-modal {
+  z-index: 999999999;
 }
 </style>
