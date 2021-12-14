@@ -1,9 +1,10 @@
 <template>
   <div class="cointainer-menu">
     <h3>Listado de productos</h3>
-    <button @click="modalCrear = true">Crear Producto</button>
+    <button @click="openForm()">Crear Producto</button>
 
-    <div v-if="modalCrear" class="container">
+    <div class="modal" id="modal-producto">
+    <div class="modal-content">
       <form action="" @submit.prevent="crearProducto()">
         <div class="row">
           <div class="col m12 card-panel">
@@ -46,17 +47,16 @@
             </div>
           </div>
           <div class="card-action bton">
-            <button class=""><i class="material-icons">save</i> Guardar</button>
+            <button class=""><i class="material-icons">save</i> 
+            {{id == 0 ? 'Guardar': 'Actualizar'}}</button>
 
-            <button class="">
-              <i class="material-icons">cancel</i>Cancelar
-            </button>
           </div>
         </div>
       </form>
     </div>
+    </div>
 
-    <table class="centered container-table striped #eceff1 blue-grey lighten-5">
+    <table class="centered container-table striped"  >
       <thead>
         <tr>
           <th>Nombre Producto</th>
@@ -85,15 +85,14 @@
         </tr>
       </tbody>
     </table>
-    <ul>
-      <li v-for=""></li>
-    </ul>
+
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import NProgress from "nprogress";
+import M from "materialize-css"
 
 export default {
   name: "Productos",
@@ -101,6 +100,7 @@ export default {
     return {
       productos: [],
       producto: {},
+      id:0,
       categoria: "",
       marca: "",
       nombre: "",
@@ -110,18 +110,19 @@ export default {
       unidades_disponibles: 0,
 
       modalCrear: false,
+      modales: []
     };
   },
-  computed: {},
+  computed: {
+    },
   created: function () {
     this.listarProductos();
   },
 
   mounted() {
-    document.addEventListener("DOMContentLoaded", function () {
       var elems = document.querySelectorAll(".modal");
-      this.productos = M.Modal.init(elems, null);
-    });
+      this.modales = M.Modal.init(elems, null);
+
   },
 
   methods: {
@@ -134,10 +135,12 @@ export default {
 
       return formatter.format(value);
     },
-    // showModalCrear() {
-    //   this.modalCrear == true;
-    //   console.log("Modal")
-    // },
+
+    openForm(id){
+      this.id = id||0;
+      var modal_producto = M.Modal.getInstance(document.querySelector('#modal-producto'));
+      modal_producto.open();
+    },
 
     listarProductos() {
       NProgress.start();
@@ -146,9 +149,7 @@ export default {
         .then((response) => {
           this.productos = [...response.data];
           console.log(this.productos);
-          if (this.productos.length > 10 ){
-            
-          }
+         
         })
         .catch((error) => {
           console.log(error);
