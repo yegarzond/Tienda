@@ -82,7 +82,7 @@
           <td>{{ numberFormat(item.precio) }}</td>
           <td>{{ item.unidades_disponibles }}</td>
           <td>
-            <button class="" @click="openForm()">
+            <button class="" @click="openForm2(item.id)">
               <i class="material-icons">create</i>
             </button>
             <button class="" @click="borrarProducto(item.id)">
@@ -113,8 +113,6 @@
     </ul>
   </div>
 </template>
-
-
 
 
 <script>
@@ -193,7 +191,13 @@ export default {
       this.pageNumber--;
     },
 
-    openForm(id) {
+    openForm() {
+      var modal_producto = M.Modal.getInstance(
+        document.querySelector("#modal-producto")
+      );
+      modal_producto.open();
+    },
+    openForm2(id) {
       this.id = id || 0;
       var modal_producto = M.Modal.getInstance(
         document.querySelector("#modal-producto")
@@ -270,43 +274,6 @@ export default {
         });
             }
     },
-    // actualizarProducto(id) {
-    //   this.openForm(id);
-      
-    //   {
-    //     let data = {
-    //       categoria: this.productos[id].categoria,
-    //       marca: this.productos[id].marca,
-    //       nombre: this.productos[id].nombre,
-    //       precio: this.productos[id].precio,
-    //       ref: this.productos[id].ref,
-    //       unidad_medida: this.productos[id].unidad_medida,
-    //       unidades_disponibles: this.productos[id].unidades_disponibles,
-    //     }
-    //     let config = {
-    //     headers: {
-    //       Authorization: `Bearer ${localStorage.getItem("access")}`,
-    //     }
-    //     };
-        
-    //   axios
-    //     .put(`http://127.0.0.1:8000/producto/${id}/`,data, config)
-    //     .then((response) => {
-    //       console.log(response.data);
-    //       this.categoria = response.data.categoria;
-    //       this.marca = response.data.marca;
-    //       this.nombre = response.data.nombre;
-    //       this.precio = response.data.precio;
-    //       this.ref = response.data.ref;
-    //       this.unidad_medida = response.data.unidad_medida;
-    //       this.unidades_disponibles = response.data.unidades_disponibles;
-    //       this.listarProductos();
-    //     })
-    //     .catch((error) => {
-    //       console.log(error);
-    //     });
-    // };
-    // },
     borrarProducto(id) {
       axios
         .delete(`http://127.0.0.1:8000/producto/${id}/`, {
