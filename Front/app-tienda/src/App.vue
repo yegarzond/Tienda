@@ -82,7 +82,7 @@ export default {
     loadAccount: function () {
       this.$router.push({ name: "account" });
     },
-  },
+  },  
   created: function () {
     this.verifyAuth();
   },

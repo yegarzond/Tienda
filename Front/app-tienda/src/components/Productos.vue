@@ -4,59 +4,64 @@
     <button @click="openForm()">Crear Producto</button>
 
     <div class="modal" id="modal-producto">
-    <div class="modal-content">
-      <form action="" @submit.prevent="crearProducto()">
-        <div class="row">
-          <div class="col m12 card-panel">
-            <span>Crear Producto</span>
-            <div class="row">
-              <div class="col m12">
-                <label>Nombre Producto</label>
-                <input type="text" v-model="nombre" />
+      <div class="modal-content">
+        <form action="" @submit.prevent="crearProducto()">
+          <div class="row">
+            <div class="col m12 card-panel">
+              <span>Crear Producto</span>
+              <div class="row">
+                <div class="col m">
+                  <label>ID</label>
+                  <input type="text" disabled v-model="nombre" />
+                </div>
+                <div class="col m8">
+                  <label>Nombre Producto</label>
+                  <input type="text" v-model="nombre" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Categoria</label>
+                  <input type="text" v-model="categoria" />
+                </div>
+                <div class="col m4">
+                  <label>Marca</label>
+                  <input type="text" v-model="marca" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Precio</label>
+                  <input type="number" v-model="precio" />
+                </div>
+                <div class="col m4">
+                  <label>Referencia</label>
+                  <input type="text" v-model="ref" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col m4">
+                  <label>Unidad de medida</label>
+                  <input type="text" v-model="unidad_medida" />
+                </div>
+                <div class="col m4">
+                  <label>Unidades disponibles </label>
+                  <input type="number" v-model="unidades_disponibles" />
+                </div>
               </div>
             </div>
-            <div class="row">
-              <div class="col m4">
-                <label>Categoria</label>
-                <input type="text" v-model="categoria" />
-              </div>
-              <div class="col m4">
-                <label>Marca</label>
-                <input type="text" v-model="marca" />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col m4">
-                <label>Precio</label>
-                <input type="number" v-model="precio" />
-              </div>
-              <div class="col m4">
-                <label>Referencia</label>
-                <input type="text" v-model="ref" />
-              </div>
-            </div>
-            <div class="row">
-              <div class="col m4">
-                <label>Unidad de medida</label>
-                <input type="text" v-model="unidad_medida" />
-              </div>
-              <div class="col m4">
-                <label>Unidades disponibles </label>
-                <input type="number" v-model="unidades_disponibles" />
-              </div>
+            <div class="card-action bton">
+              <button class="">
+                <i class="material-icons">save</i>
+                {{ id == 0 ? "Guardar" : "Actualizar" }}
+              </button>
             </div>
           </div>
-          <div class="card-action bton">
-            <button class=""><i class="material-icons">save</i> 
-            {{id == 0 ? 'Guardar': 'Actualizar'}}</button>
-
-          </div>
-        </div>
-      </form>
-    </div>
+        </form>
+      </div>
     </div>
 
-    <table class="centered container-table striped"  >
+    <table class="centered container-table striped">
       <thead>
         <tr>
           <th>Nombre Producto</th>
@@ -68,7 +73,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="item in productos" :key="item.nombre">
+        <tr v-for="item in paginate()" :key="item.nombre">
           <td>{{ item.nombre }}</td>
           <td>{{ item.categoria }}</td>
           <td>{{ item.marca }}</td>
@@ -85,22 +90,41 @@
         </tr>
       </tbody>
     </table>
-
+    <ul class="pagination">
+      <li v-bind:class="{ disabled: pageNumber == 1 }">
+        <a href="#!" @click="previousPage()"
+          ><i class="material-icons">chevron_left</i></a
+        >
+      </li>
+      <li
+        v-bind:class="{ active: page + 1 == pageNumber }"
+        v-for="page in getPagination()"
+        :key="page"
+      >
+        <a href="#!" @click="paginate(page + 1)">{{ page + 1 }}</a>
+      </li>
+      <li v-bind:class="{ disabled: pageNumber == totalPages }">
+        <a href="#!" @click="nextPage()"
+          ><i class="material-icons">chevron_right</i></a
+        >
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import NProgress from "nprogress";
-import M from "materialize-css"
+import M from "materialize-css";
 
 export default {
   name: "Productos",
   data: function () {
     return {
       productos: [],
+      productosFiltered: [],
       producto: {},
-      id:0,
+      id: 0,
       categoria: "",
       marca: "",
       nombre: "",
@@ -110,19 +134,20 @@ export default {
       unidades_disponibles: 0,
 
       modalCrear: false,
-      modales: []
+      modales: [],
+      pageSize: 10,
+      pageNumber: 1,
+      totalPages: 0,
     };
   },
-  computed: {
-    },
+  computed: {},
   created: function () {
     this.listarProductos();
   },
 
   mounted() {
-      var elems = document.querySelectorAll(".modal");
-      this.modales = M.Modal.init(elems, null);
-
+    var elems = document.querySelectorAll(".modal");
+    this.modales = M.Modal.init(elems, null);
   },
 
   methods: {
@@ -136,9 +161,36 @@ export default {
       return formatter.format(value);
     },
 
-    openForm(id){
-      this.id = id||0;
-      var modal_producto = M.Modal.getInstance(document.querySelector('#modal-producto'));
+    paginate(newPage) {
+      this.pageNumber = newPage ? newPage : this.pageNumber;
+      return this.productos.slice(
+        (this.pageNumber - 1) * this.pageSize,
+        this.pageNumber * this.pageSize
+      );
+    },
+
+    getPagination() {
+      var pages = Math.round(this.productos.length / this.pageSize);
+
+      this.totalPages = pages;
+      return Array.from(Array(pages).keys());
+    },
+    nextPage() {
+      if (this.pageNumber == this.totalPages) return;
+
+      this.pageNumber++;
+    },
+    previousPage() {
+      if (this.pageNumber == 1) return;
+
+      this.pageNumber--;
+    },
+
+    openForm(id) {
+      this.id = id || 0;
+      var modal_producto = M.Modal.getInstance(
+        document.querySelector("#modal-producto")
+      );
       modal_producto.open();
     },
 
@@ -149,7 +201,6 @@ export default {
         .then((response) => {
           this.productos = [...response.data];
           console.log(this.productos);
-         
         })
         .catch((error) => {
           console.log(error);
@@ -168,14 +219,25 @@ export default {
           unidades_disponibles: this.unidades_disponibles,
         };
       }
+      let config = {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access')}`,
+        },
+      };
 
       axios
-        .post("http://127.0.0.1:8000/producto/crear/")
-        .then(() => {
-          console.log();
+        .post("http://127.0.0.1:8000/producto/crear/", data, config)
+        .then((response) => {
+          console.log(response);
+          this.categoria = response.data.categoria;
+          this.marca = response.data.marca;
+          this.nombre = response.data.nombre;
+          this.precio = response.data.precio;
+          this.ref = response.data.ref;
+          this.unidad_medida = response.data.unidad_medida;
+          this.unidades_disponibles = response.data.unidades_disponibles;
           this.listarProductos();
         })
-
         .catch((error) => {
           console.log(error);
         });
