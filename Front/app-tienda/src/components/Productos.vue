@@ -5,14 +5,14 @@
 
     <div class="modal" id="modal-producto">
       <div class="modal-content">
-        <form action="" @submit.prevent="crearProducto()">
+        <form action="" @submit.prevent="crearProducto(id)">
           <div class="row">
-            <div class="col m12 card-panel">
+            <div class="col m12 card-panel" >
               <span>Crear Producto</span>
               <div class="row">
                 <div class="col m">
                   <label>ID</label>
-                  <input type="text" disabled v-model="nombre" />
+                  <input type="number" disabled v-model="id" />
                 </div>
                 <div class="col m8">
                   <label>Nombre Producto</label>
@@ -64,6 +64,7 @@
     <table class="centered container-table striped">
       <thead>
         <tr>
+          <th>ID</th>
           <th>Nombre Producto</th>
           <th>Categoria</th>
           <th>Marca</th>
@@ -74,16 +75,17 @@
       </thead>
       <tbody>
         <tr v-for="item in paginate()" :key="item.nombre">
+          <td>{{ item.id }}</td>
           <td>{{ item.nombre }}</td>
           <td>{{ item.categoria }}</td>
           <td>{{ item.marca }}</td>
           <td>{{ numberFormat(item.precio) }}</td>
           <td>{{ item.unidades_disponibles }}</td>
           <td>
-            <button class="" @click="listarProducto(producto.id)">
+            <button class="" @click="openForm()">
               <i class="material-icons">create</i>
             </button>
-            <button class="" @click="borrarProducto(producto.id)">
+            <button class="" @click="borrarProducto(item.id)">
               <i class="material-icons">delete</i>
             </button>
           </td>
@@ -119,11 +121,13 @@
 import axios from "axios";
 import NProgress from "nprogress";
 import M from "materialize-css";
+import { useAuthStore } from "../store/auth";
 
 export default {
   name: "Productos",
   data: function () {
     return {
+      authStore: useAuthStore(),
       productos: [],
       productosFiltered: [],
       producto: {},
@@ -210,7 +214,7 @@ export default {
         })
         .then(() => NProgress.done());
     },
-    crearProducto() {
+    crearProducto(id) {
       {
         var data = {
           categoria: this.categoria,
@@ -224,14 +228,34 @@ export default {
       }
       let config = {
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('access')}`,
+          Authorization: `Bearer ${localStorage.getItem("access")}`,
         },
       };
+      if(this.id == 0){
 
-      axios
-        .post("http://127.0.0.1:8000/producto/crear/", data, config)
+        axios
+          .post("http://127.0.0.1:8000/producto/crear/", data, config)
+          .then((response) => {
+            console.log(response);
+            this.id= response.data.id;
+            this.categoria = response.data.categoria;
+            this.marca = response.data.marca;
+            this.nombre = response.data.nombre;
+            this.precio = response.data.precio;
+            this.ref = response.data.ref;
+            this.unidad_medida = response.data.unidad_medida;
+            this.unidades_disponibles = response.data.unidades_disponibles;
+            this.listarProductos();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      
+            } else {
+              axios
+        .put(`http://127.0.0.1:8000/producto/${id}/`,data, config)
         .then((response) => {
-          console.log(response);
+          console.log(response.data);
           this.categoria = response.data.categoria;
           this.marca = response.data.marca;
           this.nombre = response.data.nombre;
@@ -244,10 +268,62 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+            }
     },
+    // actualizarProducto(id) {
+    //   this.openForm(id);
+      
+    //   {
+    //     let data = {
+    //       categoria: this.productos[id].categoria,
+    //       marca: this.productos[id].marca,
+    //       nombre: this.productos[id].nombre,
+    //       precio: this.productos[id].precio,
+    //       ref: this.productos[id].ref,
+    //       unidad_medida: this.productos[id].unidad_medida,
+    //       unidades_disponibles: this.productos[id].unidades_disponibles,
+    //     }
+    //     let config = {
+    //     headers: {
+    //       Authorization: `Bearer ${localStorage.getItem("access")}`,
+    //     }
+    //     };
+        
+    //   axios
+    //     .put(`http://127.0.0.1:8000/producto/${id}/`,data, config)
+    //     .then((response) => {
+    //       console.log(response.data);
+    //       this.categoria = response.data.categoria;
+    //       this.marca = response.data.marca;
+    //       this.nombre = response.data.nombre;
+    //       this.precio = response.data.precio;
+    //       this.ref = response.data.ref;
+    //       this.unidad_medida = response.data.unidad_medida;
+    //       this.unidades_disponibles = response.data.unidades_disponibles;
+    //       this.listarProductos();
+    //     })
+    //     .catch((error) => {
+    //       console.log(error);
+    //     });
+    // };
+    // },
+    borrarProducto(id) {
+      axios
+        .delete(`http://127.0.0.1:8000/producto/${id}/`, {
+          headers: {
+            Authorization: `Bearer ${this.authStore.currentUser.access}`,
+          },
+          })
+        .then((response) => {
+          console.log(response.data);
+          this.listarProductos();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
   },
 };
-
 </script>
 
 <style>
